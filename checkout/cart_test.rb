@@ -1,4 +1,5 @@
 require_relative '../test_case'
+require_relative 'cart'
 
 class CartTest < Test::Unit::TestCase
 
