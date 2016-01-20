@@ -22,7 +22,7 @@ class BowlingPlay
   end
 
   def total_score
-    (0..MAX_FRAMES - 1).inject { |sum, frame| sum + score(frame)}
+    (0..MAX_FRAMES).inject { |sum, frame| sum + score(frame - 1) }
   end
 
   def score frame
@@ -46,7 +46,15 @@ class BowlingPlay
     if @frames[frame].length == 1 && simple_score(frame) == 10 && @frames.length > frame + 1
       next_frame = @frames[frame + 1]
       bonus = next_frame[0]
-      bonus = bonus + next_frame[1] if next_frame.length == 2
+      if next_frame.length == 2
+        bonus = bonus + next_frame[1]
+      else
+        if @frames[frame + 2]
+          bonus = bonus + @frames[frame + 2][0]
+        end
+      end
+
+
     end
     bonus
   end

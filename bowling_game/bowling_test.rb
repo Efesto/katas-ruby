@@ -56,7 +56,7 @@ class BowlingTest < Test::Unit::TestCase
 
     @bowling_play.throw_ball
     assert_equal 12, @bowling_play.score(9)
-    assert_equal 275, @bowling_play.total_score
+    assert_equal 273, @bowling_play.total_score
   end
 
 
