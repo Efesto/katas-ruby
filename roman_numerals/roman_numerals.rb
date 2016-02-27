@@ -24,10 +24,8 @@ module RomansNumerals
           arabic_number = arabic_number - (numeral[0] - 1)
         else
           numeral = RomansNumerals.const_numerals.find { |key, value| arabic_number >= key }
-          if numeral
-            roman_number << numeral[1]
-            arabic_number = arabic_number - numeral[0]
-          end
+          roman_number << numeral[1]
+          arabic_number = arabic_number - numeral[0]
         end
       end
       roman_number
