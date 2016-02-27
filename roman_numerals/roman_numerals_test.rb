@@ -25,8 +25,18 @@ class RomanNumeralsTest < Test::Unit::TestCase
     assert_is_roman_equal 'MMXVI', 2016
   end
 
-  def assert_is_roman_equal(expected, modern)
+  def test_from_roman_to_arabic
+    assert_is_arabic_equal 1, 'I'
+    assert_is_arabic_equal 2, 'II'
+    assert_is_arabic_equal 3, 'III'
+    assert_is_arabic_equal 4, 'IV'
+  end
 
-    assert_equal expected, modern.to_roman
+  def assert_is_roman_equal(expected, arabic)
+    assert_equal expected, arabic.to_roman
+  end
+
+  def assert_is_arabic_equal(expected, actual)
+    assert_equal expected, actual.to_arabic
   end
 end
