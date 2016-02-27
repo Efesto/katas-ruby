@@ -4,7 +4,7 @@ require_relative 'roman_numerals.rb'
 class RomanNumeralsTest < Test::Unit::TestCase
   using RomansNumerals
 
-  def test_single_nouns
+  def test_from_arabic_to_roman
     assert_is_roman_equal 'I', 1
     assert_is_roman_equal 'II', 2
     assert_is_roman_equal 'III', 3
