@@ -1,34 +1,34 @@
 module RomansNumerals
-  def self.const_numerals
+  def self.roman_numerals
     {
         1000 => 'M',
+        900 => 'CM',
         500 => 'D',
+        400 => 'CD',
         100 => 'C',
+        90 => 'XC',
         50 => 'L',
+        40 => 'XL',
         10 => 'X',
+        9 => 'IX',
         5 => 'V',
+        4 => 'IV',
         1 => 'I'
     }
   end
 
   refine Fixnum do
     def to_roman
-      roman_number = ''
-      arabic_number = self
+      remaining_value = self
+      roman_numeral = ''
 
-      while arabic_number > 0
-        numeral = RomansNumerals.const_numerals.find { |key, value| arabic_number == key - 1 }
-
-        if numeral
-          roman_number << "#{RomansNumerals.const_numerals[1]}#{numeral[1]}"
-          arabic_number = arabic_number - (numeral[0] - 1)
-        else
-          numeral = RomansNumerals.const_numerals.find { |key, value| arabic_number >= key }
-          roman_number << numeral[1]
-          arabic_number = arabic_number - numeral[0]
-        end
+      while remaining_value != 0
+        bigger_roman_numeral = RomansNumerals.roman_numerals.find { |digit, numeral| remaining_value >= digit }
+        roman_numeral << bigger_roman_numeral[1]
+        remaining_value -= bigger_roman_numeral[0]
       end
-      roman_number
+
+      roman_numeral
     end
   end
 

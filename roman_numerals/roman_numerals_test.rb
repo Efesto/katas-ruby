@@ -17,11 +17,19 @@ class RomanNumeralsTest < Test::Unit::TestCase
     assert_is_roman_equal 'X', 10
     assert_is_roman_equal 'XXIX', 29
     assert_is_roman_equal 'XXXIII', 33
-    assert_is_roman_equal 'IL', 49
+    assert_is_roman_equal 'XLV', 45
+    assert_is_roman_equal 'XLVIII', 48
+    assert_is_roman_equal 'XLIX', 49
     assert_is_roman_equal 'L', 50
+    assert_is_roman_equal 'XC', 90
+    assert_is_roman_equal 'XCIX', 99
     assert_is_roman_equal 'C', 100
+    assert_is_roman_equal 'CD', 400
     assert_is_roman_equal 'D', 500
+    assert_is_roman_equal 'CM', 900
     assert_is_roman_equal 'M', 1000
+    assert_is_roman_equal 'CMXCIX', 999
+    assert_is_roman_equal 'MCM', 1900
     assert_is_roman_equal 'MMXVI', 2016
   end
 
@@ -33,7 +41,7 @@ class RomanNumeralsTest < Test::Unit::TestCase
   end
 
   def assert_is_roman_equal(expected, arabic)
-    assert_equal expected, arabic.to_roman
+    assert_equal expected, arabic.to_roman, "for #{arabic}"
   end
 
   def assert_is_arabic_equal(expected, actual)
