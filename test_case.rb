@@ -4,6 +4,7 @@ require 'require_all'
 require 'test/unit'
 require 'mocha'
 require 'mocha/test_unit'
+require 'rspec'
 
 
 
