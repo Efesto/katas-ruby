@@ -34,13 +34,19 @@ module RomanNumerals
 
   String.class_eval do
     def to_arabic
-      remaining_value = self
+      remaining_value = String.new(self)
       arabic_value = 0
+
       while remaining_value != ''
-        matches = Fixnum.roman_numerals.find_all { |digit, numeral| remaining_value.match(/#{numeral}$/) }
-        best_match = matches.first
-        #TODO: define the best match (the bigger match with more numerals token)
+        matches = Fixnum.roman_numerals.find_all { |value, roman_numeral| remaining_value.match(/#{roman_numeral}$/) }
+
+        #find the match with the biggest roman numeral
+        best_match = matches.sort_by { |match| 0 - match[1].length}.first
+
+        #removes the match from the bottom of the buffer
         remaining_value.gsub!(/#{best_match[1]}$/, '')
+
+        #sum the value
         arabic_value += best_match[0]
       end
 
