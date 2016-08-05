@@ -2,7 +2,7 @@ require_relative '../test_case'
 require_relative 'roman_numerals.rb'
 
 class RomanNumeralsTest < Test::Unit::TestCase
-  using RomansNumerals
+  using RomanNumerals
 
   def test_from_arabic_to_roman
     assert_is_roman_equal 'I', 1
