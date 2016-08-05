@@ -1,33 +1,28 @@
 class OddEven
-  attr_reader :numbers
 
-  def initialize(range_size)
-    @numbers = []
-    @range_size = range_size
-
-    (0..range_size).each do |number|
+  def self.numbers range_size
+    (0..range_size).map do |number|
       to_add = number
-      if is_even?(number)
+      if number.is_even?
         to_add = 'even'
-      else
-        if is_odd?(number)
-          to_add = 'odd'
-        end
+      elsif number.is_odd?
+        to_add = 'odd'
       end
-
-      @numbers << to_add
+      to_add
     end
   end
 
-  def is_even?(number)
-    is_divisible_by number, 2
-  end
+  Fixnum.class_eval do
+    def is_even?
+      is_divisible_by 2
+    end
 
-  def is_odd?(number)
-    is_divisible_by(number, 3) || is_divisible_by(number, 5)
-  end
+    def is_odd?
+      is_divisible_by(3) || is_divisible_by(5)
+    end
 
-  def is_divisible_by(number, divider)
-    number % divider == 0 && number != divider
+    def is_divisible_by divider
+      self != divider && self % divider == 0
+    end
   end
 end
