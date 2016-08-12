@@ -1,29 +1,29 @@
 require 'rspec'
 
 describe 'Including module' do
+  module ModuleA
+    def say_my_name
+      'A'
+    end
+  end
+
+  module ModuleB
+    def say_my_name
+      'B'
+    end
+  end
+
   it 'should change ancestors sorting based on inclusion order' do
-    module ModuleA
-      def say_my_name
-        'A'
-      end
-    end
-
-    module ModuleB
-      def say_my_name
-        'B'
-      end
-    end
-
     class IncludingB
-      include ModuleA
+      include ModuleA #overwritten
       include ModuleB
-      include ModuleA
+      include ModuleA #ignored
     end
 
     class IncludingA
-      include ModuleB
+      include ModuleB #overwritten
       include ModuleA
-      include ModuleB
+      include ModuleB #ignored
     end
 
     expect(IncludingB.new.say_my_name).to eq('B')
@@ -32,10 +32,21 @@ describe 'Including module' do
     expect(IncludingA.new.say_my_name).to eq('A')
     expect(IncludingA.ancestors[0..3]).to eq([IncludingA, ModuleA, ModuleB, Object])
   end
+
+  it 'should be descendant if included with prepend' do
+    class PrependingA
+      prepend ModuleB #overwritten
+      prepend ModuleA
+    end
+
+    expect(PrependingA.new.say_my_name).to eq('A')
+    expect(PrependingA.ancestors[0..2]).to eq([ModuleA, ModuleB, PrependingA])
+
+  end
 end
 
 describe 'Extending module' do
-  it 'extend should define a class method' do
+  it 'should define a class methods' do
     module ModuleA
       def say_my_name
         'A'
@@ -51,13 +62,13 @@ describe 'Extending module' do
     class ExtendingB
       extend ModuleA
       extend ModuleB
-      extend ModuleA
+      extend ModuleA #Ignored
     end
 
     class ExtendingA
       extend ModuleB
       extend ModuleA
-      extend ModuleB
+      extend ModuleB #Ignored
       include ModuleB
     end
 
@@ -73,7 +84,7 @@ end
 
 describe 'Ways to extend an object' do
   describe 'class << metaclass' do
-    it 'should define static methods' do
+    it 'should define class behaviours' do
       class AKlass
       end
 
@@ -92,7 +103,7 @@ describe 'Ways to extend an object' do
   end
 
   describe 'class eval' do
-    it 'should define methods on class' do
+    it 'should define behaviours on class' do
       class BKlass
       end
 
@@ -115,7 +126,7 @@ describe 'Ways to extend an object' do
   end
 
   describe 'instance eval' do
-    it 'should define methods on class instances' do
+    it 'should define behaviours on class instances' do
       class CKlass
         def initialize
           @secret_name = 'Instance'
