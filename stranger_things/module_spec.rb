@@ -13,35 +13,64 @@ describe 'Including module' do
     end
   end
 
-  it 'should change ancestors sorting based on inclusion order' do
-    class IncludingB
-      include ModuleA #overwritten
-      include ModuleB
-      include ModuleA #ignored
+  describe 'with include method' do
+
+    it 'should change ancestors sorting based on inclusion order' do
+      class IncludingB
+        include ModuleA #overwritten
+        include ModuleB
+        include ModuleA #ignored
+      end
+
+      class IncludingA
+        include ModuleB #overwritten
+        include ModuleA
+        include ModuleB #ignored
+      end
+
+      expect(IncludingB.new.say_my_name).to eq('B')
+      expect(IncludingB.ancestors[0..3]).to eq([IncludingB, ModuleB, ModuleA, Object])
+
+      expect(IncludingA.new.say_my_name).to eq('A')
+      expect(IncludingA.ancestors[0..3]).to eq([IncludingA, ModuleA, ModuleB, Object])
     end
 
-    class IncludingA
-      include ModuleB #overwritten
-      include ModuleA
-      include ModuleB #ignored
+    it 'should not overwrite class method' do
+      class IncludingAWithMethod
+        include ModuleA
+
+        def say_my_name
+          "My name is #{self.class}"
+        end
+      end
+
+      expect(IncludingAWithMethod.new.say_my_name).to eq('My name is IncludingAWithMethod')
     end
-
-    expect(IncludingB.new.say_my_name).to eq('B')
-    expect(IncludingB.ancestors[0..3]).to eq([IncludingB, ModuleB, ModuleA, Object])
-
-    expect(IncludingA.new.say_my_name).to eq('A')
-    expect(IncludingA.ancestors[0..3]).to eq([IncludingA, ModuleA, ModuleB, Object])
   end
 
-  it 'should be descendant if included with prepend' do
-    class PrependingA
-      prepend ModuleB #overwritten
-      prepend ModuleA
+  describe 'with prepend method' do
+    it 'should be descendant if included' do
+      class PrependingA
+        prepend ModuleB #overwritten
+        prepend ModuleA
+      end
+
+      expect(PrependingA.new.say_my_name).to eq('A')
+      expect(PrependingA.ancestors[0..2]).to eq([ModuleA, ModuleB, PrependingA])
     end
 
-    expect(PrependingA.new.say_my_name).to eq('A')
-    expect(PrependingA.ancestors[0..2]).to eq([ModuleA, ModuleB, PrependingA])
+    it 'should overwrite class methods' do
+      #This is a wonderful OCP violation!
+      class PrependingAWithMethod
+        prepend ModuleA
 
+        def say_my_name
+          "My name is #{self.class}"
+        end
+      end
+
+      expect(PrependingAWithMethod.new.say_my_name).to eq('A')
+    end
   end
 end
 
@@ -73,7 +102,7 @@ describe 'Extending module' do
     end
 
     expect(ExtendingB.say_my_name).to eq('B')
-    expect{ExtendingB.new.say_my_name}.to raise_error NoMethodError
+    expect { ExtendingB.new.say_my_name }.to raise_error NoMethodError
     expect(ExtendingB.ancestors).to eq([ExtendingB, Object, Kernel, BasicObject])
 
     expect(ExtendingA.say_my_name).to eq('A')
@@ -88,8 +117,8 @@ describe 'Ways to extend an object' do
       class AKlass
       end
 
-      expect{AKlass.new.say_my_name}.to raise_error NoMethodError
-      expect{AKlass.say_my_name}.to raise_error NoMethodError
+      expect { AKlass.new.say_my_name }.to raise_error NoMethodError
+      expect { AKlass.say_my_name }.to raise_error NoMethodError
 
       class << AKlass
         def say_my_name
@@ -98,7 +127,7 @@ describe 'Ways to extend an object' do
       end
 
       expect(AKlass.say_my_name).to eq('My name is Jeff')
-      expect{AKlass.new.say_my_name}.to raise_error NoMethodError
+      expect { AKlass.new.say_my_name }.to raise_error NoMethodError
     end
   end
 
@@ -107,8 +136,8 @@ describe 'Ways to extend an object' do
       class BKlass
       end
 
-      expect{BKlass.new.say_my_name}.to raise_error NoMethodError
-      expect{BKlass.say_my_name}.to raise_error NoMethodError
+      expect { BKlass.new.say_my_name }.to raise_error NoMethodError
+      expect { BKlass.say_my_name }.to raise_error NoMethodError
 
       BKlass.class_eval do
         def say_my_name
@@ -134,7 +163,7 @@ describe 'Ways to extend an object' do
       end
 
       new_instance = CKlass.new
-      expect {new_instance.say_my_name}.to raise_error NoMethodError
+      expect { new_instance.say_my_name }.to raise_error NoMethodError
 
       new_instance.instance_eval do
         def say_my_name
