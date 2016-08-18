@@ -14,14 +14,14 @@ class OddEven
 
   Fixnum.class_eval do
     def is_even?
-      is_divisible_by 2
+      is_divisible_and_is_not 2
     end
 
     def is_odd?
-      is_divisible_by(3) || is_divisible_by(5)
+      is_divisible_and_is_not(3) || is_divisible_and_is_not(5)
     end
 
-    def is_divisible_by divider
+    def is_divisible_and_is_not divider
       self != divider && self % divider == 0
     end
   end
