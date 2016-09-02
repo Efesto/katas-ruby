@@ -2,7 +2,6 @@ require_relative '../test_case'
 require_relative 'bowling_play'
 
 class BowlingTest < Test::Unit::TestCase
-
   setup do
     @bowling_play = BowlingPlay.new
   end
@@ -37,17 +36,15 @@ class BowlingTest < Test::Unit::TestCase
   end
 
   def test_strike_bonus_after_strike
-    pins_hit(10,10,10)
+    pins_hit(10, 10, 10)
     3.times { @bowling_play.throw_ball }
 
     assert_equal 30, @bowling_play.score(0)
   end
 
-
   def test_last_frame_strike
-
-    pins_hit(10,10,10,10,10,10,10,10,10,10,1,1)
-    10.times { @bowling_play.throw_ball}
+    pins_hit(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1, 1)
+    10.times { @bowling_play.throw_ball }
 
     assert_equal 10, @bowling_play.score(9)
 
@@ -58,7 +55,6 @@ class BowlingTest < Test::Unit::TestCase
     assert_equal 12, @bowling_play.score(9)
     assert_equal 273, @bowling_play.total_score
   end
-
 
   def pins_hit(*pins)
     BowlingPlay.any_instance.stubs(:pins_hit).returns(*pins)

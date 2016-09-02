@@ -19,7 +19,7 @@ describe 'Refinements' do
     end
 
     class Refinator
-      using RefinementsModule #<-- using is a module's method
+      using RefinementsModule # <-- using is a module's method
       def self.say_power
         ToRefineKlass.new.power
       end
