@@ -3,5 +3,11 @@
 Style/LineLength:
   Max: 99
 
+Style/MethodLength:
+  Max: 20
+
 Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false

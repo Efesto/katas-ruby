@@ -5,7 +5,9 @@ module RomanNumerals
       roman_numeral = ''
 
       while remaining_value.nonzero?
-        bigger_roman_numeral = Fixnum.roman_numerals.find { |digit, _numeral| remaining_value >= digit }
+        bigger_roman_numeral = Fixnum.roman_numerals.find do |digit, _numeral|
+          remaining_value >= digit
+        end
         roman_numeral << bigger_roman_numeral[1]
         remaining_value -= bigger_roman_numeral[0]
       end
@@ -38,7 +40,9 @@ module RomanNumerals
       arabic_value = 0
 
       while remaining_value != ''
-        matches = Fixnum.roman_numerals.find_all { |_value, roman_numeral| remaining_value.match(/#{roman_numeral}$/) }
+        matches = Fixnum.roman_numerals.find_all do |_value, roman_numeral|
+          remaining_value.match(/#{roman_numeral}$/)
+        end
 
         # find the match with the biggest roman numeral
         best_match = matches.sort_by { |match| 0 - match[1].length }.first

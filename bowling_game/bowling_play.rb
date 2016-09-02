@@ -21,7 +21,7 @@ class BowlingPlay
   end
 
   def total_score
-    (0..MAX_FRAMES).inject { |sum, frame| sum + score(frame - 1) }
+    (0..MAX_FRAMES).inject { |a, e| a + score(e - 1) }
   end
 
   def score(frame)
@@ -29,11 +29,11 @@ class BowlingPlay
   end
 
   def simple_score(frame)
-    @frames[frame].inject { |sum, score| sum + score }
+    @frames[frame].inject { |a, e| a + e }
   end
 
   def spare_bonus(frame)
-    if @frames[frame].length == 2 && simple_score(frame) == 10 && @frames.length > frame + 1
+    if frame_throws_count(frame) == 2 && frame_score_is_max(frame) && !frame_is_the_last(frame)
       @frames[frame + 1][0]
     else
       0
@@ -42,16 +42,28 @@ class BowlingPlay
 
   def strike_bonus(frame)
     bonus = 0
-    if @frames[frame].length == 1 && simple_score(frame) == 10 && @frames.length > frame + 1
+    if frame_throws_count(frame) == 1 && frame_score_is_max(frame) && !frame_is_the_last(frame)
       next_frame = @frames[frame + 1]
       bonus = next_frame[0]
-      if next_frame.length == 2
+      if frame_throws_count(next_frame) == 2
         bonus += next_frame[1]
       elsif @frames[frame + 2]
         bonus += @frames[frame + 2][0]
       end
     end
     bonus
+  end
+
+  def frame_score_is_max(frame)
+    simple_score(frame) == 10
+  end
+
+  def frame_throws_count(frame)
+    @frames[frame].length
+  end
+
+  def frame_is_the_last(frame)
+    @frames.length <= frame + 1
   end
 
   def pins_hit

@@ -26,11 +26,11 @@ class Cart
       Rule.new('D', 1, 15, 15)
     ]
 
-    rule = rules.find do |rule|
+    matching_rule = rules.find do |rule|
       rule.can_handle?(good)
     end
 
-    rule.get_price(good, @goods_in_cart)
+    matching_rule.get_price(good, @goods_in_cart)
   end
 
   def each_good
