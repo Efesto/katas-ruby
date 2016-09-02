@@ -1,4 +1,3 @@
-require_relative '../test_case'
 require_relative 'palindrome_string'
 
 describe '.is_palindrome' do
