@@ -11,9 +11,4 @@ RSpec::Core::RakeTask.new(:spec) do |task|
   task.pattern = '*/*_spec.rb'
 end
 
-
-task :rubocop do
-  sh "rubocop --except 'Metrics/LineLength' --except 'Style/FrozenStringLiteralComment'"
-end
-
 task default: [:test, :spec]

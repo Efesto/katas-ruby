@@ -1,0 +1,7 @@
+#--out 'rubocop.log'
+
+Style/LineLength:
+  Max: 99
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
