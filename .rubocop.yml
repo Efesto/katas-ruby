@@ -1,9 +1,7 @@
-#--out 'rubocop.log'
-
-Style/LineLength:
+Metrics/LineLength:
   Max: 99
 
-Style/MethodLength:
+Metrics/MethodLength:
   Max: 20
 
 Style/FrozenStringLiteralComment:
