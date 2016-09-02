@@ -103,11 +103,11 @@ describe 'Extending module' do
 
     expect(ExtendingB.say_my_name).to eq('B')
     expect { ExtendingB.new.say_my_name }.to raise_error NoMethodError
-    expect(ExtendingB.ancestors).to eq([ExtendingB, Object, Kernel, BasicObject])
+    expect(ExtendingB.ancestors[0..1]).to eq([ExtendingB, Object])
 
     expect(ExtendingA.say_my_name).to eq('A')
     expect(ExtendingA.new.say_my_name).to eq('B')
-    expect(ExtendingA.ancestors).to eq([ExtendingA, ModuleB, Object, Kernel, BasicObject])
+    expect(ExtendingA.ancestors[0..2]).to eq([ExtendingA, ModuleB, Object])
   end
 end
 
