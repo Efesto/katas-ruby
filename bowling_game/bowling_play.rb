@@ -20,43 +20,41 @@ module Bowling
       end
 
       current_frame.throws << throw_pins_hit
-
       @current_frame_index += 1 if current_frame.ended?
     end
 
-    def total_score
-      (0..MAX_FRAMES).inject { |a, e| a + score(e - 1) }
-    end
-
-    def score(frame_index)
-      @frames[frame_index].score + spare_bonus(frame_index) + strike_bonus(frame_index)
+    def score
+      total_score = 0
+      (0..[@frames.length, MAX_FRAMES].min - 1).each do |index|
+        total_score += @frames[index].score + spare_bonus(index) + strike_bonus(index)
+      end
+      total_score
     end
 
     def spare_bonus(frame_index)
+      bonus = 0
       frame = @frames[frame_index]
-      if frame.spare? && !frame_is_the_last(frame_index)
-        @frames[frame_index + 1].throws[0]
-      else
-        0
+
+      if frame.spare? && !last_frame?(frame_index)
+        bonus = @frames[frame_index + 1].throws[0]
       end
+      bonus
     end
 
     def strike_bonus(frame_index)
       bonus = 0
       frame = @frames[frame_index]
-      if frame.strike? && !frame_is_the_last(frame_index)
+
+      if frame.strike? && !last_frame?(frame_index)
         next_frame = @frames[frame_index + 1]
-        bonus = next_frame.throws[0]
-        if next_frame.throws.length == 2
-          bonus += next_frame.throws[1]
-        elsif @frames[frame_index + 2]
-          bonus += @frames[frame_index + 2].throws[0]
-        end
+        bonus = next_frame.score
+
+        bonus += @frames[frame_index + 2].throws[0] if next_frame.strike?
       end
       bonus
     end
 
-    def frame_is_the_last(frame_index)
+    def last_frame?(frame_index)
       @frames.length <= frame_index + 1
     end
 
