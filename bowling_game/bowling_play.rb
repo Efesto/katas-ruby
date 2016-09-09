@@ -19,7 +19,7 @@ module Bowling
         @frames << current_frame
       end
 
-      current_frame.throws << throw_pins_hit
+      current_frame.add_throw throw_pins_hit
       @current_frame_index += 1 if current_frame.ended?
     end
 
@@ -36,7 +36,7 @@ module Bowling
       frame = @frames[frame_index]
 
       if frame.spare? && !last_frame?(frame_index)
-        bonus = @frames[frame_index + 1].throws[0]
+        bonus = @frames[frame_index + 1].first_throw
       end
       bonus
     end
@@ -49,7 +49,7 @@ module Bowling
         next_frame = @frames[frame_index + 1]
         bonus = next_frame.score
 
-        bonus += @frames[frame_index + 2].throws[0] if next_frame.strike?
+        bonus += @frames[frame_index + 2].first_throw if next_frame.strike?
       end
       bonus
     end
