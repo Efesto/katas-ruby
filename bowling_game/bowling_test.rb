@@ -3,7 +3,7 @@ require_relative 'bowling_play'
 
 class BowlingTest < Test::Unit::TestCase
   setup do
-    @bowling_play = BowlingPlay.new
+    @bowling_play = Bowling::BowlingPlay.new
   end
 
   def test_frames_score_spare
@@ -57,6 +57,6 @@ class BowlingTest < Test::Unit::TestCase
   end
 
   def pins_hit(*pins)
-    BowlingPlay.any_instance.stubs(:pins_hit).returns(*pins)
+    Bowling::BowlingPlay.any_instance.stubs(:pins_hit).returns(*pins)
   end
 end
