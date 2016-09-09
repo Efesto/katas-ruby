@@ -21,8 +21,7 @@ module Bowling
 
       current_frame.throws << throw_pins_hit
 
-      @throw_again = current_frame.throws.length < 2 && throw_pins_hit < 10
-      @current_frame_index += 1 unless @throw_again
+      @current_frame_index += 1 if current_frame.ended?
     end
 
     def total_score
@@ -35,9 +34,7 @@ module Bowling
 
     def spare_bonus(frame_index)
       frame = @frames[frame_index]
-      if frame_throws_count_is_equal_to(frame, 2) &&
-          frame_score_is_max(frame) &&
-          !frame_is_the_last(frame_index)
+      if frame.spare? && !frame_is_the_last(frame_index)
         @frames[frame_index + 1].throws[0]
       else
         0
@@ -47,26 +44,16 @@ module Bowling
     def strike_bonus(frame_index)
       bonus = 0
       frame = @frames[frame_index]
-      if frame_throws_count_is_equal_to(frame, 1) &&
-          frame_score_is_max(frame) &&
-          !frame_is_the_last(frame_index)
+      if frame.strike? && !frame_is_the_last(frame_index)
         next_frame = @frames[frame_index + 1]
         bonus = next_frame.throws[0]
-        if frame_throws_count_is_equal_to(next_frame, 2)
+        if next_frame.throws.length == 2
           bonus += next_frame.throws[1]
         elsif @frames[frame_index + 2]
           bonus += @frames[frame_index + 2].throws[0]
         end
       end
       bonus
-    end
-
-    def frame_score_is_max(frame)
-      frame.score == 10
-    end
-
-    def frame_throws_count_is_equal_to(frame, count)
-      frame.throws.length == count
     end
 
     def frame_is_the_last(frame_index)
