@@ -6,6 +6,11 @@ class BowlingTest < Test::Unit::TestCase
     @bowling_play = Bowling::BowlingPlay.new
   end
 
+  def test_frame_score
+    assert_equal 1, Bowling::Frame.new(1).score
+    assert_equal 5, Bowling::Frame.new(1, 4).score
+  end
+
   def test_frames_score_spare
     pins_hit 1, 9, 5
 

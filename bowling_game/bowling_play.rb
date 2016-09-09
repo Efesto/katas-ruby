@@ -7,20 +7,22 @@ module Bowling
     def initialize
       @current_frame_index = 0
       @frames = []
-      @frame_throw = 0
     end
 
     def throw_ball
       throw_pins_hit = pins_hit
 
-      if @frames[@current_frame_index].nil?
-        @frames << Bowling::Frame.new(throw_pins_hit)
-      else
-        @frames[@current_frame_index].throws << throw_pins_hit
+      current_frame = @frames[@current_frame_index]
+
+      if current_frame.nil?
+        current_frame = Bowling::Frame.new
+        @frames << current_frame
       end
 
-      @frame_throw = @frame_throw.zero? && throw_pins_hit < 10 ? 1 : 0
-      @current_frame_index += 1 if @frame_throw.zero?
+      current_frame.throws << throw_pins_hit
+
+      @throw_again = current_frame.throws.length < 2 && throw_pins_hit < 10
+      @current_frame_index += 1 unless @throw_again
     end
 
     def total_score
@@ -28,11 +30,7 @@ module Bowling
     end
 
     def score(frame_index)
-      simple_score(@frames[frame_index]) + spare_bonus(frame_index) + strike_bonus(frame_index)
-    end
-
-    def simple_score(frame)
-      frame.throws.inject { |a, e| a + e }
+      @frames[frame_index].score + spare_bonus(frame_index) + strike_bonus(frame_index)
     end
 
     def spare_bonus(frame_index)
@@ -64,7 +62,7 @@ module Bowling
     end
 
     def frame_score_is_max(frame)
-      simple_score(frame) == 10
+      frame.score == 10
     end
 
     def frame_throws_count_is_equal_to(frame, count)
