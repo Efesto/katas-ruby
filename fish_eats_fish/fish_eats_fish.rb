@@ -1,23 +1,45 @@
-
 class FishEatsFish
+  class << self
+    def survivors(fishes, directions)
+      return fishes if fishes.length <= 1
 
-  def self.solution(fishes, directions)
+      biggest_fish_index = fishes.index(fishes.max)
+      biggest_fish_direction = directions[biggest_fish_index]
 
-    biggest_fish_index = fishes.index(fishes.max)
-    biggest_fish_direction = directions[biggest_fish_index]
+      living_fishes = []
 
-    if biggest_fish_direction == 0
-      potential_dead_fishes = directions[0, biggest_fish_index]
-      living_fishes = fishes[biggest_fish_index +1, fishes.length]
-      living_fishes_directions = directions[biggest_fish_index +1, fishes.length]
-    else
-      potential_dead_fishes = directions[biggest_fish_index + 1, directions.length]
-      living_fishes = fishes[0, biggest_fish_index]
-      living_fishes_directions = directions[0, biggest_fish_index]
+      if biggest_fish_direction.zero?
+        survivors = fishes_going_in_direction(
+          fishes[biggest_fish_index, fishes.length],
+          directions[biggest_fish_index, fishes.length],
+          biggest_fish_direction
+        )
+
+        living_fishes = survivors(fishes[0, biggest_fish_index], directions[0, biggest_fish_index])
+        living_fishes << survivors
+      else
+        survivors = fishes_going_in_direction(
+          fishes[0, biggest_fish_index + 1],
+          directions[0, biggest_fish_index + 1],
+          biggest_fish_direction
+        )
+
+        living_fishes = survivors
+        living_fishes << survivors(fishes[biggest_fish_index + 1, fishes.length], directions[biggest_fish_index + 1, fishes.length])
+      end
+
+      living_fishes.flatten
     end
 
-    dead_fishes = potential_dead_fishes.select { |direction| direction != biggest_fish_direction}
+    private
 
-    fishes.length - dead_fishes.length + (solution(living_fishes, living_fishes_directions) if living_fishes.count > 1)
+    def fishes_going_in_direction(fishes, directions, fish_direction)
+      living_fishes = []
+      directions.each_with_index do |direction, index|
+        living_fishes << fishes[index] if direction == fish_direction
+      end
+
+      living_fishes
+    end
   end
 end
