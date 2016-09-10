@@ -1,11 +1,10 @@
 class OddEven
-
-  def self.numbers range_size
+  def self.numbers(range_size)
     (0..range_size).map do |number|
       to_add = number
-      if number.is_even?
+      if number.even?
         to_add = 'even'
-      elsif number.is_odd?
+      elsif number.odd?
         to_add = 'odd'
       end
       to_add
@@ -13,16 +12,16 @@ class OddEven
   end
 
   Fixnum.class_eval do
-    def is_even?
-      is_divisible_and_is_not 2
+    def even?
+      divisible_by_and_not? 2
     end
 
-    def is_odd?
-      is_divisible_and_is_not(3) || is_divisible_and_is_not(5)
+    def odd?
+      divisible_by_and_not?(3) || divisible_by_and_not?(5)
     end
 
-    def is_divisible_and_is_not divider
-      self != divider && self % divider == 0
+    def divisible_by_and_not?(divider)
+      self != divider && (self % divider).zero?
     end
   end
 end

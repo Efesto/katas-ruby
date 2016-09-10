@@ -2,13 +2,13 @@ require 'rspec'
 
 describe 'Refinements' do
   it 'should work inside class scope' do
-    expect(ToRefineKlass.new.power).to eq('Kirilin')
-
     class ToRefineKlass
       def power
         'Kirilin'
       end
     end
+
+    expect(ToRefineKlass.new.power).to eq('Kirilin')
 
     module RefinementsModule
       refine ToRefineKlass do
@@ -19,7 +19,7 @@ describe 'Refinements' do
     end
 
     class Refinator
-      using RefinementsModule #<-- using is a module's method
+      using RefinementsModule # <-- using is a module's method
       def self.say_power
         ToRefineKlass.new.power
       end

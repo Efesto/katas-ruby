@@ -1,5 +1,4 @@
 class Rule
-
   def initialize(good_type, discount_count, discounted_price, full_price)
     @good_type = good_type
     @discount_count = discount_count

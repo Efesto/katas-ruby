@@ -1,66 +1,64 @@
-class BowlingPlay
+require_relative 'frame'
 
-  MAX_FRAMES = 10
+module Bowling
+  class BowlingPlay
+    MAX_FRAMES = 10
 
-  def initialize
-    @current_frame = 0
-    @frames = []
-    @frame_throw = 0
-  end
-
-  def throw_ball
-    throw_pins_hit = pins_hit
-
-    if @frames[@current_frame].nil?
-      @frames << [throw_pins_hit]
-    else
-      @frames[@current_frame] << throw_pins_hit
+    def initialize
+      @current_frame_index = 0
+      @frames = []
     end
 
-    @frame_throw = @frame_throw == 0 && throw_pins_hit < 10 ? 1 : 0
-    @current_frame = @current_frame + 1 if @frame_throw == 0
-  end
+    def throw_ball
+      throw_pins_hit = pins_hit
 
-  def total_score
-    (0..MAX_FRAMES).inject { |sum, frame| sum + score(frame - 1) }
-  end
+      current_frame = @frames[@current_frame_index]
 
-  def score frame
-    simple_score(frame) + spare_bonus(frame) + strike_bonus(frame)
-  end
-
-  def simple_score(frame)
-    @frames[frame].inject { |sum, score| sum + score }
-  end
-
-  def spare_bonus frame
-    if @frames[frame].length == 2 && simple_score(frame) == 10 && @frames.length > frame + 1
-      @frames[frame + 1][0]
-    else
-      0
-    end
-  end
-
-  def strike_bonus frame
-    bonus = 0
-    if @frames[frame].length == 1 && simple_score(frame) == 10 && @frames.length > frame + 1
-      next_frame = @frames[frame + 1]
-      bonus = next_frame[0]
-      if next_frame.length == 2
-        bonus = bonus + next_frame[1]
-      else
-        if @frames[frame + 2]
-          bonus = bonus + @frames[frame + 2][0]
-        end
+      if current_frame.nil?
+        current_frame = Bowling::Frame.new
+        @frames << current_frame
       end
 
-
+      current_frame.add_throw throw_pins_hit
+      @current_frame_index += 1 if current_frame.ended?
     end
-    bonus
-  end
 
+    def score
+      total_score = 0
+      (0..[@frames.length, MAX_FRAMES].min - 1).each do |index|
+        total_score += @frames[index].score + spare_bonus(index) + strike_bonus(index)
+      end
+      total_score
+    end
 
-  def pins_hit
+    def spare_bonus(frame_index)
+      bonus = 0
+      frame = @frames[frame_index]
 
+      if frame.spare? && !last_frame?(frame_index)
+        bonus = @frames[frame_index + 1].first_throw
+      end
+      bonus
+    end
+
+    def strike_bonus(frame_index)
+      bonus = 0
+      frame = @frames[frame_index]
+
+      if frame.strike? && !last_frame?(frame_index)
+        next_frame = @frames[frame_index + 1]
+        bonus = next_frame.score
+
+        bonus += @frames[frame_index + 2].first_throw if next_frame.strike?
+      end
+      bonus
+    end
+
+    def last_frame?(frame_index)
+      @frames.length <= frame_index + 1
+    end
+
+    def pins_hit
+    end
   end
 end

@@ -14,18 +14,17 @@ describe 'Including module' do
   end
 
   describe 'with include method' do
-
     it 'should change ancestors sorting based on inclusion order' do
       class IncludingB
-        include ModuleA #overwritten
+        include ModuleA # overwritten
         include ModuleB
-        include ModuleA #ignored
+        include ModuleA # ignored
       end
 
       class IncludingA
-        include ModuleB #overwritten
+        include ModuleB # overwritten
         include ModuleA
-        include ModuleB #ignored
+        include ModuleB # ignored
       end
 
       expect(IncludingB.new.say_my_name).to eq('B')
@@ -51,7 +50,7 @@ describe 'Including module' do
   describe 'with prepend method' do
     it 'should be descendant if included' do
       class PrependingA
-        prepend ModuleB #overwritten
+        prepend ModuleB # overwritten
         prepend ModuleA
       end
 
@@ -60,7 +59,7 @@ describe 'Including module' do
     end
 
     it 'should overwrite class methods' do
-      #This is a wonderful OCP violation!
+      # This is a wonderful OCP violation!
       class PrependingAWithMethod
         prepend ModuleA
 
@@ -91,23 +90,23 @@ describe 'Extending module' do
     class ExtendingB
       extend ModuleA
       extend ModuleB
-      extend ModuleA #Ignored
+      extend ModuleA # Ignored
     end
 
     class ExtendingA
       extend ModuleB
       extend ModuleA
-      extend ModuleB #Ignored
+      extend ModuleB # Ignored
       include ModuleB
     end
 
     expect(ExtendingB.say_my_name).to eq('B')
     expect { ExtendingB.new.say_my_name }.to raise_error NoMethodError
-    expect(ExtendingB.ancestors).to eq([ExtendingB, Object, Kernel, BasicObject])
+    expect(ExtendingB.ancestors[0..1]).to eq([ExtendingB, Object])
 
     expect(ExtendingA.say_my_name).to eq('A')
     expect(ExtendingA.new.say_my_name).to eq('B')
-    expect(ExtendingA.ancestors).to eq([ExtendingA, ModuleB, Object, Kernel, BasicObject])
+    expect(ExtendingA.ancestors[0..2]).to eq([ExtendingA, ModuleB, Object])
   end
 end
 
