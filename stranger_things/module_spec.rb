@@ -34,7 +34,7 @@ describe 'Including module' do
       expect(IncludingA.ancestors[0..3]).to eq([IncludingA, ModuleA, ModuleB, Object])
     end
 
-    it 'should not overwrite class method' do
+    it 'should not overwrite including class method' do
       class IncludingAWithMethod
         include ModuleA
 
@@ -58,8 +58,7 @@ describe 'Including module' do
       expect(PrependingA.ancestors[0..2]).to eq([ModuleA, ModuleB, PrependingA])
     end
 
-    it 'should overwrite class methods' do
-      # This is a wonderful OCP violation!
+    it 'should overwrite prepending class methods' do
       class PrependingAWithMethod
         prepend ModuleA
 
