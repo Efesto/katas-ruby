@@ -13,4 +13,5 @@ group :test do
   gem 'mocha'
   gem 'rspec'
   gem 'rake'
+  gem 'rspec_junit_formatter', '0.2.2'
 end
