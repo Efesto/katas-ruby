@@ -1,1 +1,1 @@
-[![Build Status](https://snap-ci.com/Efesto/katas-ruby/branch/master/build_image)](https://snap-ci.com/Efesto/katas-ruby/branch/master)
+[![CircleCI](https://circleci.com/gh/Efesto/katas-ruby.svg?style=svg)](https://circleci.com/gh/Efesto/katas-ruby)
