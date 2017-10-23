@@ -4,7 +4,7 @@ require 'rubocop/rake_task'
 
 Rake::TestTask.new do |task|
   task.test_files = FileList['**/*_test.rb']
-  .reject do |path|
+                    .reject do |path|
     path.include?('vendor')
   end
   task.verbose = true
